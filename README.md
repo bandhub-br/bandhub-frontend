@@ -41,6 +41,18 @@ ng build
 ```
 O framework criará a aplicação compilada na pasta `dist/`.
 
+### 5. Executando os Testes
+Para garantir a qualidade e estabilidade do projeto, rode os testes unitários (Jasmine + Karma) nativos do Angular CLI:
+```bash
+npm run test
+# ou
+ng test
+```
+Isso abrirá o navegador, compilará as rotinas de teste (`.spec.ts`) e observará as mudanças continuamente. Caso queira rodar apenas uma vez sem o modo de observação (ideal para CI/CD):
+```bash
+ng test --watch=false
+```
+
 ---
 
 # 💻 Stack utilizada e Decisões Técnicas
