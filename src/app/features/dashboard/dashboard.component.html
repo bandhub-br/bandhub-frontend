@@ -1,0 +1,85 @@
+<div class="dashboard-container">
+  <aside class="sidebar left-sidebar">
+    <div class="logo">
+      <h2>Band<span>Hub</span></h2>
+    </div>
+    <nav class="nav-menu">
+      <a href="#" class="nav-item active">
+        <i class="icon">🏠</i> <span>Feed</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="icon">🔍</i> <span>Explorar</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="icon">🔔</i> <span>Notificações</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="icon">✉️</i> <span>Mensagens</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="icon">👤</i> <span>Perfil</span>
+      </a>
+    </nav>
+    <button class="btn-primary create-post"><i class="icon">✍️</i> <span>Criar Post</span></button>
+  </aside>
+
+  <main class="feed-content">
+    <div class="create-post-box">
+      <img src="https://i.pravatar.cc/150?img=68" alt="Seu Perfil" class="avatar">
+      <input type="text" placeholder="O que sua banda está tocando hoje?" class="post-input">
+      <button class="btn-primary small">Postar</button>
+    </div>
+
+    <div class="post-feed">
+      <div class="post-card" *ngFor="let post of posts">
+        <div class="post-header">
+          <img [src]="post.avatar" [alt]="post.author" class="avatar">
+          <div class="post-meta">
+            <h3 class="author-name">{{ post.author }}</h3>
+            <span class="post-time">{{ post.time }}</span>
+          </div>
+          <button class="more-options">⋮</button>
+        </div>
+        <div class="post-body">
+          <p class="post-text">{{ post.content }}</p>
+          <img *ngIf="post.image" [src]="post.image" alt="Post Imagem" class="post-image">
+        </div>
+        <div class="post-footer">
+          <button class="action-btn"><i class="icon">❤️</i> {{ post.likes }}</button>
+          <button class="action-btn"><i class="icon">💬</i> {{ post.comments }}</button>
+          <button class="action-btn"><i class="icon">🔗</i> Compartilhar</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="sidebar right-sidebar">
+    <div class="widget trending">
+      <h3>Em Alta</h3>
+      <ul class="trending-list">
+        <li><span>#RockNacional</span></li>
+        <li><span>#IndieFestival</span></li>
+        <li><span>#NovoSingle</span></li>
+      </ul>
+    </div>
+    <div class="widget suggestions">
+      <h3>Bandas para seguir</h3>
+      <div class="suggestion-item">
+        <img src="https://i.pravatar.cc/150?img=33" alt="Banda 1" class="avatar-small">
+        <div class="suggestion-info">
+          <h4>Os Mutáveis</h4>
+          <span>Rock Clássico</span>
+        </div>
+        <button class="btn-follow">Seguir</button>
+      </div>
+      <div class="suggestion-item">
+        <img src="https://i.pravatar.cc/150?img=47" alt="Banda 2" class="avatar-small">
+        <div class="suggestion-info">
+          <h4>Neon Lights</h4>
+          <span>Synthpop</span>
+        </div>
+        <button class="btn-follow">Seguir</button>
+      </div>
+    </div>
+  </aside>
+</div>
