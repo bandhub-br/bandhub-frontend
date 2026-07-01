@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,6 +10,12 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
+  constructor(private authService: AuthService) {}
+
+  onLogout() {
+    this.authService.logout();
+  }
+
   posts = [
     {
       id: 1,
