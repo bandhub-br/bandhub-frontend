@@ -1,0 +1,368 @@
+// ── Design tokens (em sincronia com o dashboard) ─────────────────────────────
+$bg-base:       #0f1115;
+$bg-card:       #18191c;
+$bg-input:      #242526;
+$bg-input-focus:#2f3336;
+$border:        #2f3336;
+$border-hover:  #4a4d52;
+$accent:        #e53935;
+$accent-hover:  #c62828;
+$text-primary:  #e4e6eb;
+$text-secondary:#b0b3b8;
+$text-muted:    #8c8f94;
+$error:         #ff5252;
+$font:          'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+// ── Page layout ───────────────────────────────────────────────────────────────
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: $bg-base;
+  color: $text-primary;
+  font-family: $font;
+}
+
+.auth-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Brand panel (esquerdo) ────────────────────────────────────────────────────
+.brand-panel {
+  background: linear-gradient(160deg, #1a1a1f 0%, #0f1115 60%, #1c0a0a 100%);
+  padding: 60px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-right: 1px solid $border;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  // Barra de acento lateral
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, $accent 0%, transparent 100%);
+  }
+}
+
+.brand-content {
+  max-width: 420px;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin-bottom: 40px;
+
+  span { color: $accent; }
+}
+
+.brand-tagline {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  margin: 0 0 16px;
+}
+
+.brand-description {
+  font-size: 15px;
+  color: $text-secondary;
+  line-height: 1.6;
+  margin: 0 0 40px;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 15px;
+    color: $text-primary;
+    font-weight: 500;
+  }
+}
+
+.feature-icon {
+  font-size: 22px;
+  font-style: normal;
+  width: 44px;
+  height: 44px;
+  background-color: rgba($accent, 0.08);
+  border: 1px solid rgba($accent, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-decoration {
+  display: flex;
+  gap: 20px;
+  font-size: 28px;
+  color: rgba($accent, 0.12);
+  letter-spacing: 8px;
+  user-select: none;
+}
+
+// ── Form panel (direito) ──────────────────────────────────────────────────────
+.form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background-color: $bg-base;
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: $bg-card;
+  border: 1px solid $border;
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  @media (max-width: 480px) {
+    padding: 28px 20px;
+    border-radius: 16px;
+  }
+}
+
+// Logo visível apenas no mobile
+.mobile-logo {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 24px;
+  display: none;
+
+  span { color: $accent; }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  background-color: $bg-input;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 28px;
+  gap: 0;
+
+  button {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: $font;
+    padding: 10px 0;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: color 0.25s ease;
+
+    &.active {
+      color: #ffffff;
+    }
+  }
+
+  // Indicador deslizante
+  .tab-indicator {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background-color: $bg-card;
+    border: 1px solid $border-hover;
+    border-radius: 9px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+
+    &.right {
+      transform: translateX(calc(100% + 0px));
+    }
+  }
+}
+
+// ── Subtítulo do form ─────────────────────────────────────────────────────────
+.form-subtitle {
+  font-size: 13px;
+  color: $text-muted;
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+// ── Campos ────────────────────────────────────────────────────────────────────
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-secondary;
+    transition: color 0.2s;
+  }
+
+  input {
+    background-color: $bg-input;
+    border: 1px solid $border;
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: $text-primary;
+    font-size: 14px;
+    font-family: $font;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:hover {
+      border-color: $border-hover;
+    }
+
+    &:focus {
+      border-color: $accent;
+      background-color: $bg-input-focus;
+      box-shadow: 0 0 0 3px rgba($accent, 0.12);
+    }
+
+    &:focus + .error {
+      display: block;
+    }
+  }
+
+  // Estado de erro
+  &.has-error {
+    label { color: $error; }
+
+    input {
+      border-color: $error;
+      background-color: rgba($error, 0.04);
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($error, 0.14);
+      }
+    }
+  }
+}
+
+.error {
+  font-size: 12px;
+  color: $error;
+  font-weight: 500;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &::before {
+    content: '⚠';
+    font-size: 11px;
+  }
+}
+
+// ── Esqueci minha senha ───────────────────────────────────────────────────────
+.forgot-row {
+  text-align: right;
+  margin: -8px 0 20px;
+}
+
+.forgot-link {
+  font-size: 12px;
+  color: $text-muted;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover { color: $accent; }
+}
+
+// ── Botão principal ───────────────────────────────────────────────────────────
+.btn-submit {
+  width: 100%;
+  background-color: $accent;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: $font;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba($accent, 0.3);
+
+  &:hover {
+    background-color: $accent-hover;
+    box-shadow: 0 6px 20px rgba($accent, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// ── Link de troca de modo ─────────────────────────────────────────────────────
+.switch-mode {
+  text-align: center;
+  font-size: 13px;
+  color: $text-muted;
+  margin: 20px 0 0;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: $accent;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: $font;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  transition: color 0.2s;
+
+  &:hover { color: $accent-hover; text-decoration: underline; }
+}

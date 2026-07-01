@@ -1,0 +1,174 @@
+<div class="auth-page">
+
+  <!-- ── Painel esquerdo: branding ─────────────────────── -->
+  <div class="brand-panel">
+    <div class="brand-content">
+      <div class="logo">Band<span>Hub</span></div>
+      <h1 class="brand-tagline">Conecte-se com a cena musical</h1>
+      <p class="brand-description">
+        A plataforma para músicos, bandas e fãs compartilharem sua paixão pela música.
+      </p>
+      <ul class="feature-list">
+        <li><span class="feature-icon">🎸</span> Encontre músicos e bandas</li>
+        <li><span class="feature-icon">🎵</span> Compartilhe sua música e posts</li>
+        <li><span class="feature-icon">🎤</span> Descubra shows e eventos</li>
+        <li><span class="feature-icon">🥁</span> Forme sua banda ideal</li>
+      </ul>
+    </div>
+    <div class="brand-decoration" aria-hidden="true">
+      <span>♩</span><span>♪</span><span>♫</span><span>♬</span><span>🎵</span>
+    </div>
+  </div>
+
+  <!-- ── Painel direito: formulário ────────────────────── -->
+  <div class="form-panel">
+    <div class="auth-card">
+
+      <div class="mobile-logo">Band<span>Hub</span></div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button
+          role="tab"
+          [class.active]="mode() === 'login'"
+          (click)="setMode('login')"
+          [attr.aria-selected]="mode() === 'login'">
+          Entrar
+        </button>
+        <button
+          role="tab"
+          [class.active]="mode() === 'cadastro'"
+          (click)="setMode('cadastro')"
+          [attr.aria-selected]="mode() === 'cadastro'">
+          Cadastrar
+        </button>
+        <div class="tab-indicator" [class.right]="mode() === 'cadastro'"></div>
+      </div>
+
+      <!-- ── Formulário de Login ── -->
+      @if (mode() === 'login') {
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
+          <p class="form-subtitle">Bem-vindo de volta! Entre na sua conta.</p>
+
+          <div class="field" [class.has-error]="lEmail.touched && lEmail.invalid">
+            <label for="login-email">E-mail</label>
+            <input
+              id="login-email"
+              type="email"
+              formControlName="email"
+              placeholder="seu@email.com"
+              autocomplete="email" />
+            @if (lEmail.touched && lEmail.hasError('required')) {
+              <span class="error">E-mail é obrigatório.</span>
+            } @else if (lEmail.touched && lEmail.hasError('email')) {
+              <span class="error">Digite um e-mail válido.</span>
+            }
+          </div>
+
+          <div class="field" [class.has-error]="lSenha.touched && lSenha.invalid">
+            <label for="login-senha">Senha</label>
+            <input
+              id="login-senha"
+              type="password"
+              formControlName="senha"
+              placeholder="Mínimo 6 caracteres"
+              autocomplete="current-password" />
+            @if (lSenha.touched && lSenha.hasError('required')) {
+              <span class="error">Senha é obrigatória.</span>
+            } @else if (lSenha.touched && lSenha.hasError('minlength')) {
+              <span class="error">A senha precisa ter no mínimo 6 caracteres.</span>
+            }
+          </div>
+
+          <div class="forgot-row">
+            <a href="#" class="forgot-link">Esqueci minha senha</a>
+          </div>
+
+          <button type="submit" class="btn-submit">Entrar</button>
+
+          <p class="switch-mode">
+            Ainda não tem conta?
+            <button type="button" class="link-btn" (click)="setMode('cadastro')">Cadastre-se</button>
+          </p>
+        </form>
+      }
+
+      <!-- ── Formulário de Cadastro ── -->
+      @if (mode() === 'cadastro') {
+        <form [formGroup]="cadastroForm" (ngSubmit)="onCadastro()" novalidate>
+          <p class="form-subtitle">Crie sua conta e faça parte da cena!</p>
+
+          <div class="field" [class.has-error]="cNome.touched && cNome.invalid">
+            <label for="cad-nome">Nome</label>
+            <input
+              id="cad-nome"
+              type="text"
+              formControlName="nome"
+              placeholder="Seu nome ou nome da banda"
+              autocomplete="name" />
+            @if (cNome.touched && cNome.hasError('required')) {
+              <span class="error">Nome é obrigatório.</span>
+            } @else if (cNome.touched && cNome.hasError('minlength')) {
+              <span class="error">Nome deve ter ao menos 2 caracteres.</span>
+            }
+          </div>
+
+          <div class="field" [class.has-error]="cEmail.touched && cEmail.invalid">
+            <label for="cad-email">E-mail</label>
+            <input
+              id="cad-email"
+              type="email"
+              formControlName="email"
+              placeholder="seu@email.com"
+              autocomplete="email" />
+            @if (cEmail.touched && cEmail.hasError('required')) {
+              <span class="error">E-mail é obrigatório.</span>
+            } @else if (cEmail.touched && cEmail.hasError('email')) {
+              <span class="error">Digite um e-mail válido.</span>
+            }
+          </div>
+
+          <div class="field" [class.has-error]="cSenha.touched && cSenha.invalid">
+            <label for="cad-senha">Senha</label>
+            <input
+              id="cad-senha"
+              type="password"
+              formControlName="senha"
+              placeholder="Mínimo 6 caracteres"
+              autocomplete="new-password" />
+            @if (cSenha.touched && cSenha.hasError('required')) {
+              <span class="error">Senha é obrigatória.</span>
+            } @else if (cSenha.touched && cSenha.hasError('minlength')) {
+              <span class="error">A senha precisa ter no mínimo 6 caracteres.</span>
+            }
+          </div>
+
+          <div class="field" [class.has-error]="cConfirmar.touched && (cConfirmar.hasError('required') || (cadastroForm.hasError('passwordsMismatch') && cConfirmar.touched))">
+            <label for="cad-confirmar">Confirmar Senha</label>
+            <input
+              id="cad-confirmar"
+              type="password"
+              formControlName="confirmarSenha"
+              placeholder="Repita a senha"
+              autocomplete="new-password" />
+            @if (cConfirmar.touched && cConfirmar.hasError('required')) {
+              <span class="error">Confirmação de senha é obrigatória.</span>
+            } @else if (cConfirmar.touched && cadastroForm.hasError('passwordsMismatch')) {
+              <span class="error">As senhas não coincidem.</span>
+            }
+          </div>
+
+          <button type="submit" class="btn-submit">Criar conta</button>
+
+          <p class="switch-mode">
+            Já tem uma conta?
+            <button type="button" class="link-btn" (click)="setMode('login')">Entrar</button>
+          </p>
+        </form>
+      }
+
+    </div>
+  </div>
+
+</div>
+
