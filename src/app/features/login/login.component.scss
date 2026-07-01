@@ -318,6 +318,18 @@ $font:          'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   &:hover { color: $accent; }
 }
 
+// ── Alerta de erro global ─────────────────────────────────────────────────────
+.alert-error {
+  background-color: rgba($error, 0.08);
+  border: 1px solid rgba($error, 0.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: $error;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
 // ── Botão principal ───────────────────────────────────────────────────────────
 .btn-submit {
   width: 100%;
@@ -341,6 +353,13 @@ $font:          'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   &:active {
     transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 }
 

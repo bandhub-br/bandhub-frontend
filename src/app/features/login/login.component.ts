@@ -8,6 +8,9 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { LoginRequest, RegisterRequest } from '../../core/models/auth.models';
 
 type Mode = 'login' | 'cadastro';
 
@@ -26,11 +29,17 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
 })
 export class LoginComponent {
   mode = signal<Mode>('login');
+  loading = signal(false);
+  errorMessage = signal<string | null>(null);
 
   loginForm: FormGroup;
   cadastroForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
@@ -49,44 +58,59 @@ export class LoginComponent {
 
   setMode(m: Mode) {
     this.mode.set(m);
+    this.errorMessage.set(null);
     this.loginForm.reset();
     this.cadastroForm.reset();
   }
 
   onLogin() {
-    if (this.loginForm.invalid) { 
-      this.loginForm.markAllAsTouched(); return; 
-    }
-    console.log('Login:', this.loginForm.value);
+    if (this.loginForm.invalid) { this.loginForm.markAllAsTouched(); return; }
+
+    this.loading.set(true);
+    this.errorMessage.set(null);
+
+    const request: LoginRequest = {
+      email:    this.loginForm.value.email,
+      password: this.loginForm.value.senha,
+    };
+
+    this.authService.login(request).subscribe({
+      next: () => this.router.navigate(['/dashboard']),
+      error: (err) => {
+        this.errorMessage.set(err.error?.message ?? 'E-mail ou senha inválidos.');
+        this.loading.set(false);
+      },
+    });
   }
 
   onCadastro() {
-    if (this.cadastroForm.invalid) { 
-      this.cadastroForm.markAllAsTouched(); return; 
-    }
-    console.log('Cadastro:', this.cadastroForm.value);
+    if (this.cadastroForm.invalid) { this.cadastroForm.markAllAsTouched(); return; }
+
+    this.loading.set(true);
+    this.errorMessage.set(null);
+
+    const request: RegisterRequest = {
+      name:     this.cadastroForm.value.nome,
+      email:    this.cadastroForm.value.email,
+      password: this.cadastroForm.value.senha,
+    };
+
+    this.authService.register(request).subscribe({
+      next: () => this.setMode('login'),
+      error: (err) => {
+        this.errorMessage.set(err.error?.message ?? 'Erro ao criar conta. Tente novamente.');
+        this.loading.set(false);
+      },
+    });
   }
 
   // Login getters
-  get lEmail() { 
-    return this.loginForm.get('email')!; 
-  }
-
-  get lSenha() { 
-    return this.loginForm.get('senha')!; 
-  }
+  get lEmail() { return this.loginForm.get('email')!; }
+  get lSenha() { return this.loginForm.get('senha')!; }
 
   // Cadastro getters
-  get cNome()      { 
-    return this.cadastroForm.get('nome')!; 
-  }
-  get cEmail()     { 
-    return this.cadastroForm.get('email')!; 
-  }
-  get cSenha()     { 
-    return this.cadastroForm.get('senha')!; 
-  }
-  get cConfirmar() { 
-    return this.cadastroForm.get('confirmarSenha')!; 
-  }
+  get cNome()      { return this.cadastroForm.get('nome')!; }
+  get cEmail()     { return this.cadastroForm.get('email')!; }
+  get cSenha()     { return this.cadastroForm.get('senha')!; }
+  get cConfirmar() { return this.cadastroForm.get('confirmarSenha')!; }
 }

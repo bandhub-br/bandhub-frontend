@@ -50,6 +50,10 @@
         <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
           <p class="form-subtitle">Bem-vindo de volta! Entre na sua conta.</p>
 
+          @if (errorMessage()) {
+            <div class="alert-error">{{ errorMessage() }}</div>
+          }
+
           <div class="field" [class.has-error]="lEmail.touched && lEmail.invalid">
             <label for="login-email">E-mail</label>
             <input
@@ -84,7 +88,9 @@
             <a href="#" class="forgot-link">Esqueci minha senha</a>
           </div>
 
-          <button type="submit" class="btn-submit">Entrar</button>
+          <button type="submit" class="btn-submit" [disabled]="loading()">
+            {{ loading() ? 'Entrando...' : 'Entrar' }}
+          </button>
 
           <p class="switch-mode">
             Ainda não tem conta?
@@ -97,6 +103,10 @@
       @if (mode() === 'cadastro') {
         <form [formGroup]="cadastroForm" (ngSubmit)="onCadastro()" novalidate>
           <p class="form-subtitle">Crie sua conta e faça parte da cena!</p>
+
+          @if (errorMessage()) {
+            <div class="alert-error">{{ errorMessage() }}</div>
+          }
 
           <div class="field" [class.has-error]="cNome.touched && cNome.invalid">
             <label for="cad-nome">Nome</label>
@@ -158,7 +168,9 @@
             }
           </div>
 
-          <button type="submit" class="btn-submit">Criar conta</button>
+          <button type="submit" class="btn-submit" [disabled]="loading()">
+            {{ loading() ? 'Criando conta...' : 'Criar conta' }}
+          </button>
 
           <p class="switch-mode">
             Já tem uma conta?
