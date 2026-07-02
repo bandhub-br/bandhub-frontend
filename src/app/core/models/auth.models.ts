@@ -9,6 +9,10 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
+  accountType: 'musician' | 'band' | 'fan';
+  city?: string;
+  instruments?: string[];
+  genre?: string;
 }
 
 // ── Response do BFF ───────────────────────────────────────────────────────────

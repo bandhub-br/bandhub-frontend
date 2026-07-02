@@ -13,6 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest, RegisterRequest } from '../../core/models/auth.models';
 
 type Mode = 'login' | 'cadastro';
+type AccountType = 'musician' | 'band' | 'fan';
 
 function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
   const senha = group.get('senha')?.value;
@@ -31,6 +32,20 @@ export class LoginComponent {
   mode = signal<Mode>('login');
   loading = signal(false);
   errorMessage = signal<string | null>(null);
+  accountType = signal<AccountType | null>(null);
+
+  instrumentOptions = [
+    'Guitarra', 'Baixo', 'Bateria', 'Teclado', 'Violão',
+    'Piano', 'Violino', 'Saxofone', 'Trompete', 'Flauta',
+    'Voz / Vocal', 'Produção Musical'
+  ];
+  selectedInstruments = signal<string[]>([]);
+
+  genreOptions = [
+    'Rock', 'Pop', 'MPB', 'Sertanejo', 'Samba', 'Funk',
+    'Forró', 'Metal', 'Jazz', 'Blues', 'Indie', 'Eletrônico',
+    'R&B / Soul', 'Hip-Hop', 'Clássico', 'Gospel'
+  ];
 
   loginForm: FormGroup;
   cadastroForm: FormGroup;
@@ -51,6 +66,8 @@ export class LoginComponent {
         email: ['', [Validators.required, Validators.email]],
         senha: ['', [Validators.required, Validators.minLength(6)]],
         confirmarSenha: ['', Validators.required],
+        city: [''],
+        genre: [''],
       },
       { validators: passwordsMatchValidator }
     );
@@ -59,8 +76,23 @@ export class LoginComponent {
   setMode(m: Mode) {
     this.mode.set(m);
     this.errorMessage.set(null);
+    this.accountType.set(null);
+    this.selectedInstruments.set([]);
     this.loginForm.reset();
     this.cadastroForm.reset();
+  }
+
+  selectAccountType(type: AccountType) {
+    this.accountType.set(type);
+  }
+
+  toggleInstrument(instrument: string) {
+    const current = this.selectedInstruments();
+    if (current.includes(instrument)) {
+      this.selectedInstruments.set(current.filter(i => i !== instrument));
+    } else {
+      this.selectedInstruments.set([...current, instrument]);
+    }
   }
 
   onLogin() {
@@ -85,14 +117,24 @@ export class LoginComponent {
 
   onCadastro() {
     if (this.cadastroForm.invalid) { this.cadastroForm.markAllAsTouched(); return; }
+    if (!this.accountType()) { this.errorMessage.set('Selecione como quer usar o BandHub.'); return; }
+
+    if (this.accountType() === 'musician' && this.selectedInstruments().length === 0) {
+      this.errorMessage.set('Selecione pelo menos 1 instrumento.');
+      return;
+    }
 
     this.loading.set(true);
     this.errorMessage.set(null);
 
     const request: RegisterRequest = {
-      name:     this.cadastroForm.value.nome,
-      email:    this.cadastroForm.value.email,
-      password: this.cadastroForm.value.senha,
+      name:        this.cadastroForm.value.nome,
+      email:       this.cadastroForm.value.email,
+      password:    this.cadastroForm.value.senha,
+      accountType: this.accountType()!,
+      city:        this.cadastroForm.value.city || undefined,
+      instruments: this.accountType() === 'musician' ? this.selectedInstruments() : undefined,
+      genre:       this.accountType() === 'band' ? this.cadastroForm.value.genre : undefined,
     };
 
     this.authService.register(request).subscribe({
